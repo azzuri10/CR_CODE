@@ -36,6 +36,24 @@ struct InspOcrIn {
     std::string recModel;
     std::vector<std::string> recClassNames;
     float recConf = 0.25f;
+    size_t recSchedChunk = 32;
+    size_t recInferChunk = 16;
+    int recThreads = 4;
+
+    bool enableCls = false;
+    std::string clsModel;
+    float clsConf = 0.9f;
+    int clsBatch = 8;
+
+    bool preferPaddleNative = true;
+    std::string recDictPath;
+    bool useGpu = true;
+    bool useTrt = true;
+    bool useMkldnn = false;
+    int gpuId = 0;
+    int gpuMemMB = 2048;
+    int cpuThreads = 8;
+    std::string precision = "fp16";
 
     std::string infoConfig;
     CodeInfo inputInfo;
@@ -66,6 +84,7 @@ struct InspOcrOut {
     struct OcrInfo {
         std::vector<FinsObject> detBoxes;
         std::vector<std::string> recTexts;
+        std::vector<float> recScores;
         std::string mergedText;
         std::vector<DetectionResult> compareResults;
     } ocr;

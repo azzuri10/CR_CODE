@@ -17,9 +17,13 @@ public:
 
 private:
     bool readParams(const std::string& filePath, InspOcrIn& params, InspOcrOut& outInfo);
+    static std::vector<std::string> SplitCsv(const std::string& s);
     void Ocr_SetROI(InspOcrOut& outInfo);
     void Ocr_DetectText(InspOcrOut& outInfo);
+    bool Ocr_DetectTextPaddleNative(InspOcrOut& outInfo);
     void Ocr_RecognizeText(InspOcrOut& outInfo);
+    bool Ocr_RecognizeTextPaddleNative(InspOcrOut& outInfo);
+    void Ocr_RecognizeTextConcurrentFallback(InspOcrOut& outInfo);
     void Ocr_CompareTargets(InspOcrOut& outInfo);
     void Ocr_DrawResult(InspOcrOut& outInfo);
     bool CheckTimeout() const;
