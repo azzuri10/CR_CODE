@@ -11,14 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#define DEBUG1
-
-#ifdef DEBUG1
-
-#else
-#include <include/ocr_rec.h>
+#include "include/ocr_rec.h"
 
 namespace PaddleOCR {
+
+#if PROJECT_HAS_PADDLE_INFER
     
 void CRNNRecognizer::Run(std::vector<cv::Mat> img_list, std::vector<double> *times) {
     std::chrono::duration<float> preprocess_diff = std::chrono::steady_clock::now() - std::chrono::steady_clock::now();
@@ -34,13 +31,13 @@ void CRNNRecognizer::Run(std::vector<cv::Mat> img_list, std::vector<double> *tim
 
     for (int beg_img_no = 0; beg_img_no < img_num; beg_img_no += this->rec_batch_num_) {
         auto preprocess_start = std::chrono::steady_clock::now();
-        int end_img_no = min(img_num, beg_img_no + this->rec_batch_num_);
+        int end_img_no = std::min(img_num, beg_img_no + this->rec_batch_num_);
         float max_wh_ratio = 0;
         for (int ino = beg_img_no; ino < end_img_no; ino ++) {
             int h = img_list[indices[ino]].rows;
             int w = img_list[indices[ino]].cols;
             float wh_ratio = w * 1.0 / h;
-            max_wh_ratio = max(max_wh_ratio, wh_ratio);
+            max_wh_ratio = std::max(max_wh_ratio, wh_ratio);
         }
         std::vector<cv::Mat> norm_img_batch;
         for (int ino = beg_img_no; ino < end_img_no; ino ++) {
@@ -105,7 +102,7 @@ void CRNNRecognizer::Run(std::vector<cv::Mat> img_list, std::vector<double> *tim
                 last_index = argmax_idx;
             }
             score /= count;
-            if (isnan(score))
+            if (std::isnan(score))
                 continue;
             for (int i = 0; i < str_res.size(); i++) {
                 std::cout << str_res[i];
@@ -177,7 +174,22 @@ void CRNNRecognizer::LoadModel(const std::string &model_dir) {
   this->predictor_ = CreatePredictor(config);
 }
 
-} // namespace PaddleOCR
+#else
 
+void CRNNRecognizer::Run(std::vector<cv::Mat> img_list, std::vector<double> *times) {
+  (void)img_list;
+  if (times) {
+    times->push_back(0.0);
+    times->push_back(0.0);
+    times->push_back(0.0);
+  }
+}
+
+void CRNNRecognizer::LoadModel(const std::string &model_dir) {
+  (void)model_dir;
+}
 
 #endif
+
+} // namespace PaddleOCR
+

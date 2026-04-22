@@ -11,14 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#define DEBUG1
-
-#ifdef DEBUG1
-
-#else
-#include <include/ocr_cls.h>
+#include "include/ocr_cls.h"
 
 namespace PaddleOCR {
+
+#if PROJECT_HAS_PADDLE_INFER
 
 cv::Mat Classifier::Run(cv::Mat &img) {
   cv::Mat src_img;
@@ -74,7 +71,7 @@ cv::Mat Classifier::Run(cv::Mat &img) {
 }
 
 void Classifier::LoadModel(const std::string &model_dir) {
-  AnalysisConfig config;
+  paddle_infer::Config config;
   config.SetModel(model_dir + "/inference.pdmodel",
                   model_dir + "/inference.pdiparams");
 
@@ -113,7 +110,17 @@ void Classifier::LoadModel(const std::string &model_dir) {
 
   this->predictor_ = CreatePredictor(config);
 }
-} // namespace PaddleOCR
 
+#else
+
+cv::Mat Classifier::Run(cv::Mat &img) {
+  return img.clone();
+}
+
+void Classifier::LoadModel(const std::string &model_dir) {
+  (void)model_dir;
+}
 
 #endif
+} // namespace PaddleOCR
+

@@ -11,15 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#define DEBUG1
-
-#ifdef DEBUG1
-
-#else
-#include <include/ocr_det.h>
+#include "include/ocr_det.h"
 
 
 namespace PaddleOCR {
+
+#if PROJECT_HAS_PADDLE_INFER
 
 void DBDetector::LoadModel(const std::string &model_dir) {
   //   AnalysisConfig config;
@@ -170,7 +167,7 @@ void DBDetector::Run(cv::Mat &img,
 
   boxes = post_processor_.FilterTagDetRes(boxes, ratio_h, ratio_w, srcimg);
   auto postprocess_end = std::chrono::steady_clock::now();
-  std::cout << "Detected boxes num: " << boxes.size() << endl;
+  std::cout << "Detected boxes num: " << boxes.size() << std::endl;
 
   std::chrono::duration<float> preprocess_diff = preprocess_end - preprocess_start;
   times->push_back(double(preprocess_diff.count() * 1000));
@@ -185,7 +182,25 @@ void DBDetector::Run(cv::Mat &img,
   }
 }
 
-} // namespace PaddleOCR
+#else
 
+void DBDetector::LoadModel(const std::string &model_dir) {
+  (void)model_dir;
+}
+
+void DBDetector::Run(cv::Mat &img,
+                     std::vector<std::vector<std::vector<int>>> &boxes,
+                     std::vector<double> *times) {
+  (void)img;
+  boxes.clear();
+  if (times) {
+    times->push_back(0.0);
+    times->push_back(0.0);
+    times->push_back(0.0);
+  }
+}
 
 #endif
+
+} // namespace PaddleOCR
+

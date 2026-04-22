@@ -11,17 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#define DEBUG1
-
-#ifdef DEBUG1
-
-#else
-#include <dirent.h>
-#include <include/utility.h>
+#include "include/utility.h"
 #include <iostream>
 #include <ostream>
-#include <sys/stat.h>
-#include <sys/types.h>
+#include <filesystem>
 #include <vector>
 
 namespace PaddleOCR {
@@ -66,32 +59,17 @@ void Utility::VisualizeBboxes(
 // list all files under a directory
 void Utility::GetAllFiles(const char *dir_name,
                           std::vector<std::string> &all_inputs) {
-  if (NULL == dir_name) {
-    std::cout << " dir_name is null ! " << std::endl;
+  if (dir_name == nullptr) return;
+  namespace fs = std::filesystem;
+  fs::path p(dir_name);
+  if (!fs::exists(p)) return;
+  if (fs::is_regular_file(p)) {
+    all_inputs.push_back(p.string());
     return;
   }
-  struct stat s;
-  stat(dir_name, &s);
-  if (!S_ISDIR(s.st_mode)) {
-    std::cout << "dir_name is not a valid directory !" << std::endl;
-    all_inputs.push_back(dir_name);
-    return;
-  } else {
-    struct dirent *filename; // return value for readdir()
-    DIR *dir;                // return value for opendir()
-    dir = opendir(dir_name);
-    if (NULL == dir) {
-      std::cout << "Can not open dir " << dir_name << std::endl;
-      return;
-    }
-    std::cout << "Successfully opened the dir !" << std::endl;
-    while ((filename = readdir(dir)) != NULL) {
-      if (strcmp(filename->d_name, ".") == 0 ||
-          strcmp(filename->d_name, "..") == 0)
-        continue;
-      // img_dir + std::string("/") + all_inputs[0];
-      all_inputs.push_back(dir_name + std::string("/") +
-                           std::string(filename->d_name));
+  for (const auto &entry : fs::directory_iterator(p)) {
+    if (entry.is_regular_file()) {
+      all_inputs.push_back(entry.path().string());
     }
   }
 }
@@ -165,5 +143,3 @@ std::vector<int> Utility::argsort(const std::vector<float>& array)
 }
 
 } // namespace PaddleOCR
-
-#endif

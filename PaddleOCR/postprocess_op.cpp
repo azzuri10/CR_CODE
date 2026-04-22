@@ -11,13 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#define DEBUG1
-
-#ifdef DEBUG1
-
-#else
-#include <include/postprocess_op.h>
-#include <include/clipper.cpp>
+#include "include/postprocess_op.h"
 
 namespace PaddleOCR {
 
@@ -41,34 +35,20 @@ void PostProcessor::GetContourArea(const std::vector<std::vector<float>> &box,
 
 cv::RotatedRect PostProcessor::UnClip(std::vector<std::vector<float>> box,
                                       const float &unclip_ratio) {
-  float distance = 1.0;
-
-  GetContourArea(box, unclip_ratio, distance);
-
-  ClipperLib::ClipperOffset offset;
-  ClipperLib::Path p;
-  p << ClipperLib::IntPoint(int(box[0][0]), int(box[0][1]))
-    << ClipperLib::IntPoint(int(box[1][0]), int(box[1][1]))
-    << ClipperLib::IntPoint(int(box[2][0]), int(box[2][1]))
-    << ClipperLib::IntPoint(int(box[3][0]), int(box[3][1]));
-  offset.AddPath(p, ClipperLib::jtRound, ClipperLib::etClosedPolygon);
-
-  ClipperLib::Paths soln;
-  offset.Execute(soln, distance);
   std::vector<cv::Point2f> points;
-
-  for (int j = 0; j < soln.size(); j++) {
-    for (int i = 0; i < soln[soln.size() - 1].size(); i++) {
-      points.emplace_back(soln[j][i].X, soln[j][i].Y);
+  points.reserve(box.size());
+  for (const auto &pt : box) {
+    if (pt.size() >= 2) {
+      points.emplace_back(pt[0], pt[1]);
     }
   }
-  cv::RotatedRect res;
-  if (points.size() <= 0) {
-    res = cv::RotatedRect(cv::Point2f(0, 0), cv::Size2f(1, 1), 0);
-  } else {
-    res = cv::minAreaRect(points);
+  if (points.empty()) {
+    return cv::RotatedRect(cv::Point2f(0, 0), cv::Size2f(1, 1), 0);
   }
-  return res;
+  cv::RotatedRect rect = cv::minAreaRect(points);
+  rect.size.width = std::max(1.0f, rect.size.width * unclip_ratio);
+  rect.size.height = std::max(1.0f, rect.size.height * unclip_ratio);
+  return rect;
 }
 
 float **PostProcessor::Mat2Vec(cv::Mat mat) {
@@ -339,8 +319,8 @@ PostProcessor::FilterTagDetRes(std::vector<std::vector<std::vector<int>>> boxes,
       boxes[n][m][0] /= ratio_w;
       boxes[n][m][1] /= ratio_h;
 
-      boxes[n][m][0] = int(_min(_max(boxes[n][m][0], 0), oriimg_w - 1));
-      boxes[n][m][1] = int(_min(_max(boxes[n][m][1], 0), oriimg_h - 1));
+      boxes[n][m][0] = int(std::min(std::max(boxes[n][m][0], 0), oriimg_w - 1));
+      boxes[n][m][1] = int(std::min(std::max(boxes[n][m][1], 0), oriimg_h - 1));
     }
   }
 
@@ -359,5 +339,3 @@ PostProcessor::FilterTagDetRes(std::vector<std::vector<std::vector<int>>> boxes,
 
 } // namespace PaddleOCR
 
-
-#endif

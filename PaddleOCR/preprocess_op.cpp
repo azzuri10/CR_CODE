@@ -11,16 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#define DEBUG1
-
-#ifdef DEBUG1
-
-#else
+#include "include/preprocess_op.h"
 #include "opencv2/core.hpp"
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/imgproc.hpp"
-#include "paddle_api.h"
-#include "paddle_inference_api.h"
+#include <algorithm>
 #include <chrono>
 #include <iomanip>
 #include <iostream>
@@ -30,8 +25,6 @@
 #include <cstring>
 #include <fstream>
 #include <numeric>
-
-#include <include/preprocess_op.h>
 
 namespace PaddleOCR {
 
@@ -90,8 +83,8 @@ void ResizeImgType0::Run(const cv::Mat &img, cv::Mat &resize_img,
   int resize_h = int(float(h) * ratio);
   int resize_w = int(float(w) * ratio);
 
-  resize_h = max(int(round(float(resize_h) / 32) * 32), 32);
-  resize_w = max(int(round(float(resize_w) / 32) * 32), 32);
+  resize_h = std::max(int(round(float(resize_h) / 32) * 32), 32);
+  resize_w = std::max(int(round(float(resize_w) / 32) * 32), 32);
 
   cv::resize(img, resize_img, cv::Size(resize_w, resize_h));
   ratio_h = float(resize_h) / float(h);
@@ -148,5 +141,3 @@ void ClsResizeImg::Run(const cv::Mat &img, cv::Mat &resize_img,
 
 } // namespace PaddleOCR
 
-
-#endif
