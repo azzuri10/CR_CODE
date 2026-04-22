@@ -1,0 +1,278 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{8a6faf51-7660-4a5f-99fd-22052214ddfd}</ProjectGuid>
+    <RootNamespace>AOICR</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>AOIcr</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="OpenCV_4.10.0_debug.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="OpenCV_4.10.0_release.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>EXE</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>EXE</OutDir>
+    <TargetName>AOIcr</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>ALGO;COMMON;OIL;XML;TEST;BAG;DETECT;SEGMENT;POSE;CLASSIFY;DEEP_TOOL;AUTO_PARTS;D:\TensorRT-8.6.1.6\include;$(TENSORRT_DIR)\include;$(TensorRTDir)\include;$(TensorRTRoot)\include;$(CUDA_PATH)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/Zm300 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;NOMINMAX;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>ALGO;COMMON;OIL;XML;TEST;BAG;DETECT;SEGMENT;POSE;CLASSIFY;DEEP_TOOL;AUTO_PARTS;D:\TensorRT-8.6.1.6\include;$(TENSORRT_DIR)\include;$(TensorRTDir)\include;$(TensorRTRoot)\include;$(CUDA_PATH)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <OpenMPSupport>
+      </OpenMPSupport>
+      <AdditionalOptions>/Zm500 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="ALGO\AnalyseMat.cpp" />
+    <ClCompile Include="ALGO\BarAndQR.cpp" />
+    <ClCompile Include="ALGO\CalcFun.cpp" />
+    <ClCompile Include="ALGO\InferenceWorker.cpp" />
+    <ClCompile Include="ALGO\LocationAndRecognition.cpp" />
+    <ClCompile Include="ALGO\MatchFun.cpp" />
+    <ClCompile Include="ALGO\ModelManager.cpp" />
+    <ClCompile Include="BAG\InspHeatSeal.cpp" />
+    <ClCompile Include="BAG\InspSew.cpp" />
+    <ClCompile Include="ClassfyWord.cpp" />
+    <ClCompile Include="CODE_READER\HalconBarcodeDetector.cpp" />
+    <ClCompile Include="COMMON\AsyncLogger.cpp" />
+    <ClCompile Include="COMMON\Common.cpp" />
+    <ClCompile Include="COMMON\DllExtern.cpp" />
+    <ClCompile Include="COMMON\DrawAndShowImg.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MaxSpeed</Optimization>
+    </ClCompile>
+    <ClCompile Include="COMMON\HalconFun.cpp" />
+    <ClCompile Include="COMMON\HeaderDefine.cpp" />
+    <ClCompile Include="COMMON\Log.cpp" />
+    <ClCompile Include="COMMON\PutTextZH.cpp" />
+    <ClCompile Include="COMMON\TxtOperater.cpp" />
+    <ClCompile Include="DETECT\yolo26_detector.cpp" />
+    <ClCompile Include="DllExtern2.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="OIL\HalconCircle.cpp" />
+    <ClCompile Include="OIL\InspBottleNeck.cpp" />
+    <ClCompile Include="OIL\InspBottleNum.cpp" />
+    <ClCompile Include="OIL\InspBoxBag.cpp" />
+    <ClCompile Include="OIL\InspCode.cpp" />
+    <ClCompile Include="OIL\InspHandle.cpp" />
+    <ClCompile Include="OIL\InspLabelAll.cpp" />
+    <ClCompile Include="OIL\InspLevel.cpp" />
+    <ClCompile Include="OIL\InspPressCap.cpp" />
+    <ClCompile Include="PaddleOCR\ocr_cls.cpp" />
+    <ClCompile Include="PaddleOCR\ocr_det.cpp" />
+    <ClCompile Include="PaddleOCR\ocr_rec.cpp" />
+    <ClCompile Include="PaddleOCR\postprocess_op.cpp" />
+    <ClCompile Include="PaddleOCR\preprocess_op.cpp" />
+    <ClCompile Include="PaddleOCR\utility.cpp" />
+    <ClCompile Include="TEST\AES.cpp" />
+    <ClCompile Include="TEST\ClassfyWord-1.cpp" />
+    <ClCompile Include="TEST\cropImg.cpp" />
+    <ClCompile Include="TEST\cropImgObb.cpp" />
+    <ClCompile Include="TEST\dll_test.cpp" />
+    <ClCompile Include="TEST\FileSplitter.cpp" />
+    <ClCompile Include="TEST\FileSplitterTime.cpp" />
+    <ClCompile Include="TEST\LoadJsonAndCrop.cpp" />
+    <ClCompile Include="TEST\LocateAndClassfy.cpp" />
+    <ClCompile Include="TEST\match.cpp" />
+    <ClCompile Include="TEST\merge.cpp" />
+    <ClCompile Include="TEST\rewrite_xml.cpp" />
+    <ClCompile Include="TEST\rewrite_xml_cap.cpp" />
+    <ClCompile Include="TEST\rewrite_xml_cap_defect.cpp" />
+    <ClCompile Include="TEST\rewrite_xml_neck.cpp" />
+    <ClCompile Include="TEST\rewrite_xml_rect.cpp" />
+    <ClCompile Include="TEST\testMaskJson.cpp" />
+    <ClCompile Include="TEST\testTargetJson.cpp" />
+    <ClCompile Include="TEST\TrainTestBox.cpp" />
+    <ClCompile Include="TEST\TrainTestCode.cpp" />
+    <ClCompile Include="TEST\yolov11.cpp" />
+    <ClCompile Include="XML\Data.cpp" />
+    <ClCompile Include="XML\LoadJsonConfig.cpp" />
+    <ClCompile Include="XML\tinystr.cpp" />
+    <ClCompile Include="XML\tinyxml.cpp" />
+    <ClCompile Include="XML\tinyxmlerror.cpp" />
+    <ClCompile Include="XML\tinyxmlparser.cpp" />
+    <ClCompile Include="XML\write_json.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ALGO\AnalyseMat.h" />
+    <ClInclude Include="ALGO\BarAndQR.h" />
+    <ClInclude Include="ALGO\CalcFun.h" />
+    <ClInclude Include="ALGO\InferenceManager.h" />
+    <ClInclude Include="ALGO\InferenceWorker.h" />
+    <ClInclude Include="ALGO\LocationAndRecognition.h" />
+    <ClInclude Include="ALGO\MatchFun.h" />
+    <ClInclude Include="ALGO\ModelManager.h" />
+    <ClInclude Include="BAG\InspHeatSeal.h" />
+    <ClInclude Include="BAG\InspHeatSealStruct.h" />
+    <ClInclude Include="BAG\InspSewStruct.h" />
+    <ClInclude Include="BAG\InspSew.h" />
+    <ClInclude Include="CLASSIFY\classfy_vino.h" />
+    <ClInclude Include="COMMON\AsyncLogge.h" />
+    <ClInclude Include="COMMON\Common.h" />
+    <ClInclude Include="COMMON\DllExtern.h" />
+    <ClInclude Include="COMMON\DllExternCR.h" />
+    <ClInclude Include="COMMON\DrawAndShowImg.h" />
+    <ClInclude Include="COMMON\HalconFun.h" />
+    <ClInclude Include="COMMON\HeaderDefine.h" />
+    <ClInclude Include="COMMON\json.hpp" />
+    <ClInclude Include="COMMON\Log.h" />
+    <ClInclude Include="COMMON\PutTextZH.h" />
+    <ClInclude Include="COMMON\TxtOperater.h" />
+    <ClInclude Include="DETECT\yolo26_detector.h" />
+    <ClInclude Include="DETECT\detection.h" />
+    <ClInclude Include="OIL\InspBottleNeck.h" />
+    <ClInclude Include="OIL\InspBottleNeckStruct.h" />
+    <ClInclude Include="OIL\InspBottleNum.h" />
+    <ClInclude Include="OIL\InspBottleNumStruct.h" />
+    <ClInclude Include="OIL\InspBoxBag.h" />
+    <ClInclude Include="OIL\InspBoxBagStruct.h" />
+    <ClInclude Include="OIL\InspCode.h" />
+    <ClInclude Include="OIL\InspCodeStruct.h" />
+    <ClInclude Include="OIL\InspHandle.h" />
+    <ClInclude Include="OIL\InspHandleStruct.h" />
+    <ClInclude Include="OIL\InspLabelAll.h" />
+    <ClInclude Include="OIL\InspLabelAllStruct.h" />
+    <ClInclude Include="OIL\InspLevel.h" />
+    <ClInclude Include="OIL\InspLevelStruct.h" />
+    <ClInclude Include="OIL\InspPressCap.h" />
+    <ClInclude Include="OIL\InspPressCapStruct.h" />
+    <ClInclude Include="XML\Data.h" />
+    <ClInclude Include="XML\LoadJsonConfig.h" />
+    <ClInclude Include="XML\tinystr.h" />
+    <ClInclude Include="XML\tinyxml.h" />
+    <ClInclude Include="XML\write_json.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <IncludePath>D:\opencv_install\onnxruntime-win-x64-1.15.0\include;C:\Program Files (x86)\TBB\include;C:\Program Files (x86)\Intel\openvino_2023.3.0\runtime\include;D:\TensorRT-8.6.1.6\samples\common;D:\TensorRT-8.6.1.6\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include;C:\Program Files\MVTec\HALCON-18.11-Progress\include\halconcpp;C:\Program Files\MVTec\HALCON-18.11-Progress\include;D:\opencv_install\opencv_4.10.0\include\opencv2;D:\opencv_install\opencv_4.10.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\TensorRT-8.6.1.6\lib;D:\opencv_install\onnxruntime-win-x64-1.15.0\lib;C:\Program Files %28x86%29\TBB\lib;C:\Program Files (x86)\Intel\openvino_2023.3.0\runtime\lib\intel64\Release;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\lib\x64;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\lib;D:\opencv_install\opencv_4.10.0\x64\vc16\lib;C:\Program Files\MVTec\HALCON-18.11-Progress\lib\x64-win64;$(LibraryPath)</LibraryPath>
+    <_PropertySheetDisplayName>OpenCV_4.10.0 debug</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>opencv_world4100.lib;openvino.lib;halconcpp.lib;onnxruntime.lib;tbb.lib;tbb12.lib;tbbmalloc.lib;tbbmalloc_proxy.lib;cublas.lib;cublasLt.lib;cuda.lib;cudadevrt.lib;cudart.lib;cudart_static.lib;cudnn.lib;cudnn64_8.lib;cudnn_adv_infer.lib;cudnn_adv_infer64_8.lib;cudnn_adv_train.lib;cudnn_adv_train64_8.lib;cudnn_cnn_infer.lib;cudnn_cnn_infer64_8.lib;cudnn_cnn_train.lib;cudnn_cnn_train64_8.lib;cudnn_ops_infer.lib;cudnn_ops_infer64_8.lib;cudnn_ops_train.lib;cudnn_ops_train64_8.lib;cufft.lib;cufftw.lib;cufilt.lib;curand.lib;cusolver.lib;cusolverMg.lib;cusparse.lib;nppc.lib;nppial.lib;nppicc.lib;nppidei.lib;nppif.lib;nppig.lib;nppim.lib;nppist.lib;nppisu.lib;nppitc.lib;npps.lib;nvblas.lib;nvinfer.lib;nvinfer_dispatch.lib;nvinfer_lean.lib;nvinfer_plugin.lib;nvinfer_vc_plugin.lib;nvjpeg.lib;nvml.lib;nvonnxparser.lib;nvparsers.lib;nvptxcompiler_static.lib;nvrtc-builtins_static.lib;nvrtc.lib;nvrtc_static.lib;onnxruntime_providers_shared.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files\MVTec\HALCON-18.11-Progress\lib\x64-win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>

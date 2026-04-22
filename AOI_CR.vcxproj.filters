@@ -1,0 +1,450 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="源文件\ALGO">
+      <UniqueIdentifier>{164a7701-10a2-4b3a-8228-e640bf5d74b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\COMMON">
+      <UniqueIdentifier>{c5583d46-5e60-4797-a149-9cfb67893827}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\OIL">
+      <UniqueIdentifier>{c8d24f41-3c07-444e-a284-cbf5bac5e621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\TEST">
+      <UniqueIdentifier>{8be827b6-1809-4aec-b363-4068f61b216f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\XML">
+      <UniqueIdentifier>{8c570d87-58d7-41b7-a8fe-6a438b51268b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\PaddleOCR">
+      <UniqueIdentifier>{68e24e8f-b600-4a3a-b7a9-6c1290be530f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\BAG">
+      <UniqueIdentifier>{1b820717-3896-43b5-8c28-39c7957795fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\CLASSIFY">
+      <UniqueIdentifier>{2751ce34-d665-426d-92de-a3d39c820781}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\DETECT">
+      <UniqueIdentifier>{08980217-f9e3-4331-ba22-ea8b9b38b80e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\SEGMENT">
+      <UniqueIdentifier>{40ea479d-d839-4d33-953a-03fe4de40ddc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="头文件\ALGO">
+      <UniqueIdentifier>{911778dd-d3de-45fd-aaaa-2d49321cc5a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\COMMON">
+      <UniqueIdentifier>{543ca42e-2af1-43b7-9ac2-352e8044685e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\OIL">
+      <UniqueIdentifier>{936d02ef-199d-48a0-af0f-2bc8fcfbe5da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\TEST">
+      <UniqueIdentifier>{5ebcbd46-cc43-4898-9af0-c0b7b62479e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\XML">
+      <UniqueIdentifier>{d1056a27-6c4f-43a9-8bc4-4e09fa26c658}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\PaddleOCR">
+      <UniqueIdentifier>{06050f33-6d96-4f1d-a7f6-8f0929b21633}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\BAG">
+      <UniqueIdentifier>{c94630a5-ab36-4ff1-ba0c-e76b95fb98bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\DETECT">
+      <UniqueIdentifier>{04b91004-11a6-4a24-abcd-fb0660b51c02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\CLASSIFY">
+      <UniqueIdentifier>{9e9cf494-477e-4e47-9f9a-cc56d489bc58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\SEGMENT">
+      <UniqueIdentifier>{90b48af2-e573-4d70-aa89-fbd3844149ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\POSE">
+      <UniqueIdentifier>{3c3c9ab0-f3d5-4b2f-90da-a5c920eaf6c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\POSE">
+      <UniqueIdentifier>{3157d417-8579-4b1a-ab45-e86c6cb1e07c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\CODE_READER">
+      <UniqueIdentifier>{e160992b-9a3d-4bb7-b8ee-c506c94ef078}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\CODE_READER">
+      <UniqueIdentifier>{f2535394-e57e-4d64-ae82-f2978c8d9200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\DEEP_TOOL">
+      <UniqueIdentifier>{aed3c7ce-be59-41fa-8fd3-24530d77093e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\DEEP_TOOL">
+      <UniqueIdentifier>{5a07aa77-03ee-4def-91ca-1656c2a9cf4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\GENERAL">
+      <UniqueIdentifier>{93fe11f9-7444-446a-bc46-ccc1dc7f7359}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\GENERAL">
+      <UniqueIdentifier>{d8994992-cbfe-461b-b836-81c98e0d6f2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\AUTO_PARTS">
+      <UniqueIdentifier>{6ff94d2e-ed8d-4070-bf2c-eab51c7e132e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\AUTO_PARTS">
+      <UniqueIdentifier>{cd4eba16-3600-49b3-8797-a2d955e4d99c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ALGO\AnalyseMat.cpp">
+      <Filter>源文件\ALGO</Filter>
+    </ClCompile>
+    <ClCompile Include="ALGO\CalcFun.cpp">
+      <Filter>源文件\ALGO</Filter>
+    </ClCompile>
+    <ClCompile Include="COMMON\HeaderDefine.cpp">
+      <Filter>源文件\COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="COMMON\DrawAndShowImg.cpp">
+      <Filter>源文件\COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="COMMON\Log.cpp">
+      <Filter>源文件\COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="COMMON\TxtOperater.cpp">
+      <Filter>源文件\COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="COMMON\DllExtern.cpp">
+      <Filter>源文件\COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="ALGO\MatchFun.cpp">
+      <Filter>源文件\ALGO</Filter>
+    </ClCompile>
+    <ClCompile Include="ALGO\LocationAndRecognition.cpp">
+      <Filter>源文件\ALGO</Filter>
+    </ClCompile>
+    <ClCompile Include="COMMON\PutTextZH.cpp">
+      <Filter>源文件\COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="XML\tinystr.cpp">
+      <Filter>源文件\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="XML\tinyxml.cpp">
+      <Filter>源文件\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="XML\tinyxmlerror.cpp">
+      <Filter>源文件\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="XML\tinyxmlparser.cpp">
+      <Filter>源文件\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="XML\Data.cpp">
+      <Filter>源文件\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="COMMON\Common.cpp">
+      <Filter>源文件\COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="PaddleOCR\ocr_cls.cpp">
+      <Filter>源文件\PaddleOCR</Filter>
+    </ClCompile>
+    <ClCompile Include="PaddleOCR\ocr_det.cpp">
+      <Filter>源文件\PaddleOCR</Filter>
+    </ClCompile>
+    <ClCompile Include="PaddleOCR\ocr_rec.cpp">
+      <Filter>源文件\PaddleOCR</Filter>
+    </ClCompile>
+    <ClCompile Include="PaddleOCR\postprocess_op.cpp">
+      <Filter>源文件\PaddleOCR</Filter>
+    </ClCompile>
+    <ClCompile Include="PaddleOCR\preprocess_op.cpp">
+      <Filter>源文件\PaddleOCR</Filter>
+    </ClCompile>
+    <ClCompile Include="PaddleOCR\utility.cpp">
+      <Filter>源文件\PaddleOCR</Filter>
+    </ClCompile>
+    <ClCompile Include="ALGO\BarAndQR.cpp">
+      <Filter>源文件\COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="ALGO\ModelManager.cpp">
+      <Filter>源文件\ALGO</Filter>
+    </ClCompile>
+    <ClCompile Include="ALGO\InferenceWorker.cpp">
+      <Filter>源文件\ALGO</Filter>
+    </ClCompile>
+    <ClCompile Include="OIL\InspPressCap.cpp">
+      <Filter>源文件\OIL</Filter>
+    </ClCompile>
+    <ClCompile Include="DllExtern2.cpp">
+      <Filter>源文件\COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\dll_test.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\rewrite_xml.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\rewrite_xml_cap.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\rewrite_xml_cap_defect.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\rewrite_xml_rect.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\rewrite_xml_neck.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\match.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\cropImg.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="XML\write_json.cpp">
+      <Filter>源文件\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\cropImgObb.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="COMMON\HalconFun.cpp">
+      <Filter>源文件\COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\LoadJsonAndCrop.cpp">
+      <Filter>源文件\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\yolov11.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="XML\LoadJsonConfig.cpp">
+      <Filter>源文件\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="OIL\InspLevel.cpp">
+      <Filter>源文件\OIL</Filter>
+    </ClCompile>
+    <ClCompile Include="OIL\InspHandle.cpp">
+      <Filter>源文件\OIL</Filter>
+    </ClCompile>
+    <ClCompile Include="COMMON\AsyncLogger.cpp">
+      <Filter>源文件\COMMON</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\merge.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="OIL\InspLabelAll.cpp">
+      <Filter>源文件\OIL</Filter>
+    </ClCompile>
+    <ClCompile Include="CODE_READER\HalconBarcodeDetector.cpp">
+      <Filter>源文件\CODE_READER</Filter>
+    </ClCompile>
+    <ClCompile Include="OIL\InspCode.cpp">
+      <Filter>源文件\OIL</Filter>
+    </ClCompile>
+    <ClCompile Include="ClassfyWord.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="OIL\InspBottleNum.cpp">
+      <Filter>源文件\OIL</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\TrainTestCode.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\TrainTestBox.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\ClassfyWord-1.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\LocateAndClassfy.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\AES.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="OIL\InspBottleNeck.cpp">
+      <Filter>源文件\OIL</Filter>
+    </ClCompile>
+    <ClCompile Include="OIL\HalconCircle.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\testTargetJson.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\testMaskJson.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="BAG\InspSew.cpp">
+      <Filter>源文件\BAG</Filter>
+    </ClCompile>
+    <ClCompile Include="OIL\InspBoxBag.cpp">
+      <Filter>源文件\OIL</Filter>
+    </ClCompile>
+    <ClCompile Include="BAG\InspHeatSeal.cpp">
+      <Filter>源文件\BAG</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\FileSplitter.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST\FileSplitterTime.cpp">
+      <Filter>源文件\TEST</Filter>
+    </ClCompile>
+    <ClCompile Include="DETECT\yolo26_detector.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ALGO\AnalyseMat.h">
+      <Filter>头文件\ALGO</Filter>
+    </ClInclude>
+    <ClInclude Include="ALGO\CalcFun.h">
+      <Filter>头文件\ALGO</Filter>
+    </ClInclude>
+    <ClInclude Include="COMMON\HeaderDefine.h">
+      <Filter>头文件\COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="COMMON\DrawAndShowImg.h">
+      <Filter>头文件\COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="COMMON\Log.h">
+      <Filter>头文件\COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="COMMON\TxtOperater.h">
+      <Filter>头文件\COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="COMMON\Common.h">
+      <Filter>头文件\COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="COMMON\DllExtern.h">
+      <Filter>头文件\COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="ALGO\MatchFun.h">
+      <Filter>头文件\ALGO</Filter>
+    </ClInclude>
+    <ClInclude Include="ALGO\LocationAndRecognition.h">
+      <Filter>头文件\ALGO</Filter>
+    </ClInclude>
+    <ClInclude Include="COMMON\PutTextZH.h">
+      <Filter>头文件\COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="XML\tinystr.h">
+      <Filter>头文件\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="XML\tinyxml.h">
+      <Filter>头文件\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="XML\Data.h">
+      <Filter>头文件\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="COMMON\DllExternCR.h">
+      <Filter>头文件\COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="CLASSIFY\classfy_vino.h">
+      <Filter>头文件\CLASSIFY</Filter>
+    </ClInclude>
+    <ClInclude Include="ALGO\BarAndQR.h">
+      <Filter>头文件\ALGO</Filter>
+    </ClInclude>
+    <ClInclude Include="ALGO\ModelManager.h">
+      <Filter>头文件\ALGO</Filter>
+    </ClInclude>
+    <ClInclude Include="ALGO\InferenceWorker.h">
+      <Filter>头文件\ALGO</Filter>
+    </ClInclude>
+    <ClInclude Include="OIL\InspPressCap.h">
+      <Filter>头文件\OIL</Filter>
+    </ClInclude>
+    <ClInclude Include="OIL\InspPressCapStruct.h">
+      <Filter>头文件\OIL</Filter>
+    </ClInclude>
+    <ClInclude Include="COMMON\json.hpp">
+      <Filter>源文件\COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="XML\write_json.h">
+      <Filter>头文件\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="XML\LoadJsonConfig.h">
+      <Filter>头文件\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="COMMON\HalconFun.h">
+      <Filter>头文件\COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="OIL\InspLevel.h">
+      <Filter>头文件\OIL</Filter>
+    </ClInclude>
+    <ClInclude Include="OIL\InspLevelStruct.h">
+      <Filter>头文件\OIL</Filter>
+    </ClInclude>
+    <ClInclude Include="OIL\InspHandle.h">
+      <Filter>头文件\OIL</Filter>
+    </ClInclude>
+    <ClInclude Include="OIL\InspHandleStruct.h">
+      <Filter>头文件\OIL</Filter>
+    </ClInclude>
+    <ClInclude Include="COMMON\AsyncLogge.h">
+      <Filter>头文件\COMMON</Filter>
+    </ClInclude>
+    <ClInclude Include="ALGO\InferenceManager.h">
+      <Filter>头文件\ALGO</Filter>
+    </ClInclude>
+    <ClInclude Include="OIL\InspLabelAll.h">
+      <Filter>头文件\OIL</Filter>
+    </ClInclude>
+    <ClInclude Include="OIL\InspLabelAllStruct.h">
+      <Filter>头文件\OIL</Filter>
+    </ClInclude>
+    <ClInclude Include="OIL\InspCode.h">
+      <Filter>头文件\OIL</Filter>
+    </ClInclude>
+    <ClInclude Include="OIL\InspCodeStruct.h">
+      <Filter>头文件\OIL</Filter>
+    </ClInclude>
+    <ClInclude Include="OIL\InspBottleNum.h">
+      <Filter>头文件\OIL</Filter>
+    </ClInclude>
+    <ClInclude Include="OIL\InspBottleNumStruct.h">
+      <Filter>头文件\OIL</Filter>
+    </ClInclude>
+    <ClInclude Include="OIL\InspBottleNeck.h">
+      <Filter>头文件\OIL</Filter>
+    </ClInclude>
+    <ClInclude Include="OIL\InspBottleNeckStruct.h">
+      <Filter>头文件\OIL</Filter>
+    </ClInclude>
+    <ClInclude Include="BAG\InspSew.h">
+      <Filter>头文件\BAG</Filter>
+    </ClInclude>
+    <ClInclude Include="BAG\InspSewStruct.h">
+      <Filter>头文件\BAG</Filter>
+    </ClInclude>
+    <ClInclude Include="OIL\InspBoxBag.h">
+      <Filter>头文件\OIL</Filter>
+    </ClInclude>
+    <ClInclude Include="OIL\InspBoxBagStruct.h">
+      <Filter>头文件\OIL</Filter>
+    </ClInclude>
+    <ClInclude Include="BAG\InspHeatSeal.h">
+      <Filter>头文件\BAG</Filter>
+    </ClInclude>
+    <ClInclude Include="BAG\InspHeatSealStruct.h">
+      <Filter>头文件\BAG</Filter>
+    </ClInclude>
+    <ClInclude Include="DETECT\yolo26_detector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DETECT\detection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

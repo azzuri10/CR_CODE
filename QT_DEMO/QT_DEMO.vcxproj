@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>MakeFileProj</Keyword>
+    <ProjectGuid>{CB2873D7-2D83-4EFE-8A03-167FA2D5DC56}</ProjectGuid>
+    <RootNamespace>AOIQtDemo</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>QT_DEMO</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\OpenCV_4.10.0_debug.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\OpenCV_4.10.0_release.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <NMakeBuildCommandLine>cmake --fresh -S "$(MSBuildProjectDirectory)" -B "$(MSBuildProjectDirectory)\build" -G "Visual Studio 16 2019" -A Win32 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=C:/Qt/6.5.3/msvc2019_64 &amp;&amp; cmake --build "$(MSBuildProjectDirectory)\build" --config Debug</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>cmake --build "$(MSBuildProjectDirectory)\build" --config Debug --target clean &amp;&amp; cmake --build "$(MSBuildProjectDirectory)\build" --config Debug</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>cmake --build "$(MSBuildProjectDirectory)\build" --config Debug --target clean</NMakeCleanCommandLine>
+    <NMakeOutput>$(MSBuildProjectDirectory)\build\Debug\AOIQtDemo.exe</NMakeOutput>
+    <NMakePreprocessorDefinitions>$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <OutDir>$(MSBuildProjectDirectory)\build\Debug\</OutDir>
+    <IntDir>$(MSBuildProjectDirectory)\build\Debug\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <NMakeBuildCommandLine>cmake --fresh -S "$(MSBuildProjectDirectory)" -B "$(MSBuildProjectDirectory)\build" -G "Visual Studio 16 2019" -A Win32 -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=C:/Qt/6.5.3/msvc2019_64 &amp;&amp; cmake --build "$(MSBuildProjectDirectory)\build" --config Release</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>cmake --build "$(MSBuildProjectDirectory)\build" --config Release --target clean &amp;&amp; cmake --build "$(MSBuildProjectDirectory)\build" --config Release</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>cmake --build "$(MSBuildProjectDirectory)\build" --config Release --target clean</NMakeCleanCommandLine>
+    <NMakeOutput>$(MSBuildProjectDirectory)\build\Release\AOIQtDemo.exe</NMakeOutput>
+    <NMakePreprocessorDefinitions>$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <OutDir>$(MSBuildProjectDirectory)\build\Release\</OutDir>
+    <IntDir>$(MSBuildProjectDirectory)\build\Release\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <NMakeBuildCommandLine>cmake --fresh -S "$(MSBuildProjectDirectory)" -B "$(MSBuildProjectDirectory)\build" -G "Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=C:/Qt/6.5.3/msvc2019_64 &amp;&amp; cmake --build "$(MSBuildProjectDirectory)\build" --config Debug</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>cmake --build "$(MSBuildProjectDirectory)\build" --config Debug --target clean &amp;&amp; cmake --build "$(MSBuildProjectDirectory)\build" --config Debug</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>cmake --build "$(MSBuildProjectDirectory)\build" --config Debug --target clean</NMakeCleanCommandLine>
+    <NMakeOutput>$(MSBuildProjectDirectory)\build\Debug\AOIQtDemo.exe</NMakeOutput>
+    <NMakePreprocessorDefinitions>$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <OutDir>$(MSBuildProjectDirectory)\build\Debug\</OutDir>
+    <IntDir>$(MSBuildProjectDirectory)\build\Debug\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <NMakeBuildCommandLine>cmake --fresh -S "$(MSBuildProjectDirectory)" -B "$(MSBuildProjectDirectory)\build" -G "Visual Studio 16 2019" -A x64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=C:/Qt/6.5.3/msvc2019_64 &amp;&amp; cmake --build "$(MSBuildProjectDirectory)\build" --config Release</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>cmake --build "$(MSBuildProjectDirectory)\build" --config Release --target clean &amp;&amp; cmake --build "$(MSBuildProjectDirectory)\build" --config Release</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>cmake --build "$(MSBuildProjectDirectory)\build" --config Release --target clean</NMakeCleanCommandLine>
+    <NMakeOutput>$(MSBuildProjectDirectory)\build\Release\AOIQtDemo.exe</NMakeOutput>
+    <NMakePreprocessorDefinitions>$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <OutDir>$(MSBuildProjectDirectory)\build\Release\</OutDir>
+    <IntDir>$(MSBuildProjectDirectory)\build\Release\</IntDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="CMakeLists.txt" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MainWindow.cpp" />
+    <ClCompile Include="src\DllInvoker.cpp" />
+    <ClInclude Include="src\MainWindow.h" />
+    <ClInclude Include="src\DllInvoker.h" />
+    <None Include="README.md" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

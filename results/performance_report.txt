@@ -1,0 +1,12 @@
+Performance Report
+==================
+Engine: best.engine
+Test Folder: F:/IMG/CODE/JZZL/0702
+Total images: 529
+Total objects: 0
+Avg objects per image: 0.00
+Total time: 23553 ms
+Avg load time: 3.96 ms
+Avg infer time: 39.61 ms
+FPS (inference): 25.24
+FPS (total): 22.46
