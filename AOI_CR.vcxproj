@@ -184,6 +184,7 @@
     <ClCompile Include="OIL\InspBottleNum.cpp" />
     <ClCompile Include="OIL\InspBoxBag.cpp" />
     <ClCompile Include="OIL\InspCode.cpp" />
+    <ClCompile Include="OIL\InspOcr.cpp" />
     <ClCompile Include="OIL\InspHandle.cpp" />
     <ClCompile Include="OIL\InspLabelAll.cpp" />
     <ClCompile Include="OIL\InspLevel.cpp" />
@@ -258,6 +259,8 @@
     <ClInclude Include="OIL\InspBoxBagStruct.h" />
     <ClInclude Include="OIL\InspCode.h" />
     <ClInclude Include="OIL\InspCodeStruct.h" />
+    <ClInclude Include="OIL\InspOcr.h" />
+    <ClInclude Include="OIL\InspOcrStruct.h" />
     <ClInclude Include="OIL\InspHandle.h" />
     <ClInclude Include="OIL\InspHandleStruct.h" />
     <ClInclude Include="OIL\InspLabelAll.h" />
