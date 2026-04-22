@@ -33,7 +33,6 @@ std::map<std::string, std::string> InspCode::codeClassifyModelMap;
 std::map<std::string, std::string> InspCode::codeDefectModelMap;
 std::map<int, InspCodeIn> InspCode::cameraConfigMap;
 
-// #region agent log
 static void DebugLogCodeAssist(const char* runId, const char* hypothesisId, const char* location,
 	int jobId, int cameraId, int statusCode, int valid, int elapsedMs, float score)
 {
@@ -52,7 +51,47 @@ static void DebugLogCodeAssist(const char* runId, const char* hypothesisId, cons
 		<< ",\"score\":" << score
 		<< "},\"timestamp\":" << ts << "}\n";
 }
-// #endregion
+
+static bool ApplyCodeAssistMatchStatus(InspCodeOut& outInfo, int rv, Log* logger) {
+	const int valid = outInfo.geometry.matchLocateResult.valid;
+	const auto setError = [&](CODE_RETURN_VAL code, const std::string& msg) {
+		outInfo.status.errorMessage = msg;
+		outInfo.status.statusCode = code;
+		logger->WriteLog("模板", ERR, outInfo.paths.logFile, true, msg);
+	};
+
+	switch (valid) {
+	case 0:
+		setError(CODE_RETURN_MATCH_ERR0, "辅助定位-匹配失败!");
+		return false;
+	case 1:
+		logger->WriteLog("模板", INFO, outInfo.paths.logFile, true, "匹配成功!");
+		return true;
+	case 2:
+		setError(CODE_RETURN_MATCH_ERR5, "辅助定位-得分过低!");
+		return false;
+	case 3:
+		setError(CODE_RETURN_MATCH_ERR1, "辅助定位-歪斜!");
+		return false;
+	case 5:
+		setError(CODE_RETURN_MATCH_ERR2, "辅助定位-水平偏移!");
+		return false;
+	case 6:
+		setError(CODE_RETURN_MATCH_ERR3, "辅助定位-垂直偏移!");
+		return false;
+	case 7:
+		setError(CODE_RETURN_MATCH_ERR4, "辅助定位-距离偏移!");
+		return false;
+	default:
+		break;
+	}
+
+	if (rv == 8) {
+		setError(CODE_RETURN_TIMEOUT, "算法超时!");
+		return false;
+	}
+	return true;
+}
 std::map<int, std::deque<std::string>> InspCode::recentCodeContents;
 std::map<int, std::string> InspCode::lastSerialNumber;
 std::mutex InspCode::staticMutex;
@@ -1323,10 +1362,8 @@ inline MappedTargetResult MapTargetRoiByRelativePosition(
 
 
 void InspCode::Code_Assist(InspCodeOut& outInfo) {
-	// #region agent log
 	DebugLogCodeAssist("pre-fix", "H1", "OIL/InspCode.cpp:Code_Assist:entry",
 		outInfo.system.jobId, outInfo.system.cameraId, outInfo.status.statusCode, -999, 0, -1.0f);
-	// #endregion
 	if (outInfo.status.statusCode != CODE_RETURN_OK) {
 		LOG->WriteLog("跳过辅助定位!", WARNING, outInfo.paths.logFile, m_params.saveLogTxt);
 		return;
@@ -1343,8 +1380,6 @@ void InspCode::Code_Assist(InspCodeOut& outInfo) {
 
 	try {
 		MatchLocateConfig& matchCfg = m_params.assistPara;
-
-		// Halcon辅助定位
 		if (matchCfg.matchType == 0 || matchCfg.matchType == 1) {
 			auto t0 = std::chrono::high_resolution_clock::now();
 
@@ -1352,50 +1387,13 @@ void InspCode::Code_Assist(InspCodeOut& outInfo) {
 			int rv = MF->MatchLocateHalcon(m_img, matchCfg, outInfo.geometry.matchLocateResult);
 			auto t1 = std::chrono::high_resolution_clock::now();
 			int elapsedMs = (int)std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count();
-			// #region agent log
 			DebugLogCodeAssist("pre-fix", "H2", "OIL/InspCode.cpp:Code_Assist:afterMatchLocateHalcon",
 				outInfo.system.jobId, outInfo.system.cameraId, outInfo.status.statusCode,
 				outInfo.geometry.matchLocateResult.valid, elapsedMs, outInfo.geometry.matchLocateResult.score);
-			// #endregion
-			// 错误处理
-			// 0:匹配失败  1：匹配成功 2：匹配得分过低 3：歪斜 4:错误特征 5:水平偏移 6:垂直偏移 7:距离偏移
-			if (outInfo.geometry.matchLocateResult.valid == 0) {
-				outInfo.status.errorMessage = "辅助定位-匹配失败!";
-				outInfo.status.statusCode = CODE_RETURN_MATCH_ERR0;
-				LOG->WriteLog("模板", ERR, outInfo.paths.logFile, true, "辅助定位-匹配失败!");
-			}
-			else if (outInfo.geometry.matchLocateResult.valid == 1) {
-				LOG->WriteLog("模板", ERR, outInfo.paths.logFile, true, "匹配成功!");
-			}
-			else if (outInfo.geometry.matchLocateResult.valid == 2) {
-				outInfo.status.errorMessage = "辅助定位-得分过低!";
-				outInfo.status.statusCode = CODE_RETURN_MATCH_ERR5;
-				LOG->WriteLog("模板", ERR, outInfo.paths.logFile, true, "匹配-得分过低!");
-			}
-			else if (outInfo.geometry.matchLocateResult.valid == 3) {
-				outInfo.status.errorMessage = "辅助定位-歪斜!";
-				outInfo.status.statusCode = CODE_RETURN_MATCH_ERR1;
-				LOG->WriteLog("模板", ERR, outInfo.paths.logFile, true, "匹配-歪斜!");
-			}
-			else if (outInfo.geometry.matchLocateResult.valid == 5) {
-				outInfo.status.errorMessage = "辅助定位-水平偏移!";
-				outInfo.status.statusCode = CODE_RETURN_MATCH_ERR2;
-				LOG->WriteLog("模板", ERR, outInfo.paths.logFile, true, "匹配-水平偏移!");
-			}
-			else if (outInfo.geometry.matchLocateResult.valid == 6) {
-				outInfo.status.errorMessage = "辅助定位-垂直偏移!";
-				outInfo.status.statusCode = CODE_RETURN_MATCH_ERR3;
-				LOG->WriteLog("模板", ERR, outInfo.paths.logFile, true, "匹配-垂直偏移!");
-			}
-			else if (outInfo.geometry.matchLocateResult.valid == 7) {
-				outInfo.status.errorMessage = "辅助定位-距离偏移!";
-				outInfo.status.statusCode = CODE_RETURN_MATCH_ERR4;
-				LOG->WriteLog("模板", ERR, outInfo.paths.logFile, true, "匹配-距离偏移!");
-			}
-			else if (rv == 8) {
-				outInfo.status.errorMessage = "算法超时!";
-				outInfo.status.statusCode = CODE_RETURN_TIMEOUT;
-				LOG->WriteLog("模板", ERR, outInfo.paths.logFile, true, "匹配-算法超时!");
+
+			ApplyCodeAssistMatchStatus(outInfo, rv, LOG.get());
+			if (outInfo.status.statusCode != CODE_RETURN_OK) {
+				return;
 			}
 		}
 
@@ -1409,13 +1407,11 @@ void InspCode::Code_Assist(InspCodeOut& outInfo) {
 
 	if (outInfo.status.statusCode == CODE_RETURN_OK)
 	{
-		// #region agent log
 		DebugLogCodeAssist("pre-fix", "H3", "OIL/InspCode.cpp:Code_Assist:beforeRotate",
 			outInfo.system.jobId, outInfo.system.cameraId, outInfo.status.statusCode,
 			outInfo.geometry.matchLocateResult.valid, 0, outInfo.geometry.matchLocateResult.score);
-		// #endregion
 		ANA->RotateImg(m_img, m_img, outInfo.geometry.matchLocateResult.center, outInfo.geometry.matchLocateResult.angle);
-		MappedTargetResult mapped = MapTargetRoiByRelativePosition(m_params.assistPara, outInfo.geometry.matchLocateResult);
+		MapTargetRoiByRelativePosition(m_params.assistPara, outInfo.geometry.matchLocateResult);
 		outInfo.geometry.transformedRoi.center = outInfo.geometry.matchLocateResult.center;
 		outInfo.geometry.transformedRoi.center.x -= (m_params.assistPara.templatePose.x + m_params.assistPara.templatePose.width / 2 - m_params.assistPara.targetRoi.x - m_params.assistPara.targetRoi.width / 2);
 		outInfo.geometry.transformedRoi.center.y -= (m_params.assistPara.templatePose.y + m_params.assistPara.templatePose.height / 2 - m_params.assistPara.targetRoi.y - m_params.assistPara.targetRoi.height / 2);
@@ -1424,12 +1420,10 @@ void InspCode::Code_Assist(InspCodeOut& outInfo) {
 		outInfo.geometry.codeRect.y = outInfo.geometry.transformedRoi.center.y - m_params.assistPara.targetRoi.height / 2;
 		outInfo.geometry.codeRect.width = m_params.assistPara.targetRoi.width;
 		outInfo.geometry.codeRect.height = m_params.assistPara.targetRoi.height;
-		// #region agent log
 		DebugLogCodeAssist("pre-fix", "H4", "OIL/InspCode.cpp:Code_Assist:exit",
 			outInfo.system.jobId, outInfo.system.cameraId, outInfo.status.statusCode,
 			outInfo.geometry.matchLocateResult.valid, outInfo.geometry.codeRect.width * outInfo.geometry.codeRect.height,
 			outInfo.geometry.matchLocateResult.score);
-		// #endregion
 	}
 
 
