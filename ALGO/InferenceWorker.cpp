@@ -430,10 +430,51 @@ std::vector<FinsObject> InferenceWorker::Run(
     }
 
     // 解析输出
-    const int dimensions = outputs[0].size[1];
-    const int rows = outputs[0].size[2];
-    outputs[0] = outputs[0].reshape(1, dimensions).t();
-    float* data = reinterpret_cast<float*>(outputs[0].data);
+    cv::Mat out = outputs[0];
+    int dimensions = 0;
+    int rows = 0;
+    bool is_yolo26 = false;  // [x1,y1,x2,y2,conf,cls]
+    bool has_obj_conf = false; // [x,y,w,h,obj,cls...]
+
+    if (out.dims == 3) {
+        // 常见格式:
+        // [1, C, N]  -> 传统YOLO
+        // [1, N, 6]  -> YOLO26
+        if (out.size[1] == 6) {
+            dimensions = out.size[1];
+            rows = out.size[2];
+            out = out.reshape(1, dimensions).t(); // [N,6]
+            is_yolo26 = true;
+        }
+        else if (out.size[2] == 6) {
+            dimensions = out.size[2];
+            rows = out.size[1];
+            out = out.reshape(1, rows); // [N,6]
+            is_yolo26 = true;
+        }
+        else {
+            dimensions = out.size[1];
+            rows = out.size[2];
+            out = out.reshape(1, dimensions).t(); // [N,C]
+            has_obj_conf = (dimensions == 5 + static_cast<int>(classes.size()));
+        }
+    }
+    else if (out.dims == 2) {
+        // [N,6] or [N,C]
+        rows = out.size[0];
+        dimensions = out.size[1];
+        is_yolo26 = (dimensions == 6);
+        has_obj_conf = (!is_yolo26 && dimensions == 5 + static_cast<int>(classes.size()));
+    }
+    else {
+        // 兜底
+        dimensions = out.total() >= 6 ? 6 : static_cast<int>(out.total());
+        rows = static_cast<int>(out.total()) / std::max(1, dimensions);
+        out = out.reshape(1, rows);
+        is_yolo26 = (dimensions == 6);
+    }
+
+    float* data = reinterpret_cast<float*>(out.data);
 
     const cv::Size image_size = input.size();
     std::vector<cv::Rect> boxes;
@@ -443,8 +484,40 @@ std::vector<FinsObject> InferenceWorker::Run(
     // 使用从预处理获取的max_size
     const float scale = max_size * 1.0f / inputWidth;
 
-    bool is_v11 = (dimensions == 5 + static_cast<int>(classes.size()));
-    if (is_v11) {
+    if (is_yolo26) {
+        // YOLO26 输出格式: [x1, y1, x2, y2, conf, class_id]
+        for (int i = 0; i < rows; ++i) {
+            const float x1 = data[0];
+            const float y1 = data[1];
+            const float x2 = data[2];
+            const float y2 = data[3];
+            const float confidence = data[4];
+            const int class_id = static_cast<int>(data[5]);
+
+            if (confidence >= conf_threshold &&
+                class_id >= 0 && class_id < static_cast<int>(classes.size())) {
+
+                int left = static_cast<int>(x1 * scale);
+                int top = static_cast<int>(y1 * scale);
+                int right = static_cast<int>(x2 * scale);
+                int bottom = static_cast<int>(y2 * scale);
+
+                left = std::max(0, std::min(left, image_size.width - 1));
+                top = std::max(0, std::min(top, image_size.height - 1));
+                right = std::max(0, std::min(right, image_size.width));
+                bottom = std::max(0, std::min(bottom, image_size.height));
+
+                cv::Rect bbox(left, top, std::max(0, right - left), std::max(0, bottom - top));
+                if (bbox.width > 0 && bbox.height > 0) {
+                    boxes.push_back(bbox);
+                    confidences.push_back(confidence);
+                    class_ids.push_back(class_id);
+                }
+            }
+            data += dimensions;
+        }
+    }
+    else if (has_obj_conf) {
         // YOLOv11 输出格式: [x, y, w, h, obj_conf, cls1, cls2, ...]
         for (int i = 0; i < rows; ++i) {
             float obj_conf = data[4];
@@ -576,13 +649,16 @@ std::vector<FinsObject> InferenceWorker::Run(
     detections.reserve(indices.size());
     AnalyseMat ANA;
     for (int idx : indices) {
-        if (!ANA.JudgeRectIn(cv::Rect(0, 0, input.cols, input.rows), boxes[idx])) {
+        if (idx < 0 || idx >= static_cast<int>(valid_boxes.size())) {
+            continue;
+        }
+        if (!ANA.JudgeRectIn(cv::Rect(0, 0, input.cols, input.rows), valid_boxes[idx])) {
             continue;
         };
         FinsObject obj;
-        obj.box = boxes[idx];
-        obj.confidence = confidences[idx];
-        obj.className = classes[class_ids[idx]];
+        obj.box = valid_boxes[idx];
+        obj.confidence = valid_confidences[idx];
+        obj.className = classes[valid_class_ids[idx]];
         detections.push_back(obj);
     }
 
@@ -717,23 +793,45 @@ FinsClassification InferenceWorker::RunClassification(
     auto model_mutex = GetModelMutex(cameraId, model_path, trt_context);
 
     if (model_path.find(".engine") != std::string::npos) {
-        std::vector<Detection> detections;
+        // engine优先走检测器；如果输出异常，回退到Run的统一检测流程，提升兼容性
+        float best_confidence = -1.0f;
+        int best_class_id = -1;
+
         {
             std::unique_lock<std::mutex> lock(*model_mutex);
             auto detector_ptr = mgr.GetYoloDetector(model_path);
-            detections = detector_ptr->infer(input);
-        }
-
-        float best_confidence = -1.0f;
-        int best_class_id = -1;
-        for (const auto& detection : detections) {
-            if (detection.conf > best_confidence) {
-                best_confidence = detection.conf;
-                best_class_id = detection.class_id;
+            if (detector_ptr) {
+                std::vector<Detection> detections = detector_ptr->infer(input);
+                for (const auto& detection : detections) {
+                    if (detection.class_id < 0 ||
+                        detection.class_id >= static_cast<int>(classes.size())) {
+                        continue;
+                    }
+                    if (detection.conf > best_confidence) {
+                        best_confidence = detection.conf;
+                        best_class_id = detection.class_id;
+                    }
+                }
             }
         }
 
-        if (best_confidence < conf_threshold || best_class_id < 0 || best_class_id >= static_cast<int>(classes.size())) {
+        if (best_class_id < 0 || best_confidence < conf_threshold) {
+            auto fallback = Run(cameraId, model_path, classes, input, conf_threshold, 0.45f);
+            for (const auto& obj : fallback) {
+                auto it = std::find(classes.begin(), classes.end(), obj.className);
+                if (it == classes.end()) {
+                    continue;
+                }
+                int class_id = static_cast<int>(std::distance(classes.begin(), it));
+                if (obj.confidence > best_confidence) {
+                    best_confidence = obj.confidence;
+                    best_class_id = class_id;
+                }
+            }
+        }
+
+        if (best_class_id < 0 || best_class_id >= static_cast<int>(classes.size()) ||
+            best_confidence < conf_threshold) {
             return { "", 0.0f };
         }
 
