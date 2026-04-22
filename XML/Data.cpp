@@ -2,19 +2,26 @@
 #include "Data.h"
 #include "tinyxml.h"
 #include <stdio.h>
-#include <windows.h>
-#include <winbase.h>
 #include "math.h" 
 #include <iostream>  
 #include <iomanip>  
 #include <fstream> 
-#include <direct.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <io.h>  
-
-#define ACCESS _access  
-#define MKDIR(a) _mkdir((a))  
+#ifdef _WIN32
+#include <windows.h>
+#include <winbase.h>
+#include <direct.h>
+#include <io.h>
+#define ACCESS _access
+#define MKDIR(a) _mkdir((a))
+#else
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#define ACCESS access
+#define MKDIR(a) mkdir((a), 0755)
+#endif
 
 int DT_CreatDir(char* pDir)
 {

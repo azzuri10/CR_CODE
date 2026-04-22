@@ -9,8 +9,12 @@
 #include <algorithm>
 #include <iomanip>
 #include <fcntl.h>
-#include <io.h>
 #include <regex>
+#ifdef _WIN32
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
 using namespace std;
 // 日期结构
 #include <string>

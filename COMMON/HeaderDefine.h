@@ -18,12 +18,13 @@
 #include <map>
 #include <ctime>
 #include <fcntl.h>
-#include <io.h>
 #include <regex>
 // Platform-specific headers
 #ifdef _WIN32
 #include <io.h>
 #include <windows.h>
+#else
+#include <unistd.h>
 #endif
 
 // Computer vision libraries

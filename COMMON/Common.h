@@ -3,10 +3,12 @@
 
 #include <time.h>
 #include "HeaderDefine.h"
-#include <direct.h>
 #include "HalconCpp.h"
 #include <vector>
 #include <string>
+#ifdef _WIN32
+#include <direct.h>
+#endif
 
 class Common {
 public:

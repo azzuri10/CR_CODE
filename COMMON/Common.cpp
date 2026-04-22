@@ -379,8 +379,8 @@ void Common::GetCurrentTimeMsec() {
 
 std::string Common::time_t2string(const time_t time_t_time) {
     tm localTm;
-    if (localtime_s(&localTm, &time_t_time) != 0) {
-        throw std::runtime_error("localtime_s failed");
+    if (!LocalTimeSafe(&time_t_time, &localTm)) {
+        throw std::runtime_error("localtime conversion failed");
     }
 
     int year = localTm.tm_year + 1900;
