@@ -948,38 +948,45 @@ std::vector<FinsClassification> InferenceWorker::RunClassificationBatch(
         return results;
     }
 
-    int dims[4] = {
-        static_cast<int>(validBlobs.size()),
-        validBlobs[0].size[1],
-        validBlobs[0].size[2],
-        validBlobs[0].size[3]
-    };
-    cv::Mat batchBlob(4, dims, CV_32F);
-    const size_t sampleElems = static_cast<size_t>(dims[1]) * dims[2] * dims[3];
-    float* dst = reinterpret_cast<float*>(batchBlob.data);
-    for (size_t i = 0; i < validBlobs.size(); ++i) {
-        const float* src = reinterpret_cast<const float*>(validBlobs[i].data);
-        std::memcpy(dst + i * sampleElems, src, sampleElems * sizeof(float));
-    }
+    constexpr size_t kChunkSize = 16;
+    for (size_t chunkStart = 0; chunkStart < validBlobs.size(); chunkStart += kChunkSize) {
+        const size_t chunkEnd = std::min(chunkStart + kChunkSize, validBlobs.size());
+        const size_t chunkCount = chunkEnd - chunkStart;
 
-    cv::Mat prob;
-    {
-        std::unique_lock<std::mutex> lock(*model_mutex);
-        net_ptr->setInput(batchBlob);
-        prob = net_ptr->forward();
-    }
+        int dims[4] = {
+            static_cast<int>(chunkCount),
+            validBlobs[0].size[1],
+            validBlobs[0].size[2],
+            validBlobs[0].size[3]
+        };
+        cv::Mat batchBlob(4, dims, CV_32F);
+        const size_t sampleElems = static_cast<size_t>(dims[1]) * dims[2] * dims[3];
+        float* dst = reinterpret_cast<float*>(batchBlob.data);
 
-    const int batch = static_cast<int>(validBlobs.size());
-    cv::Mat prob2d = prob.reshape(1, batch);
-    for (int i = 0; i < batch; ++i) {
-        cv::Point class_id_point;
-        double confidence = 0.0;
-        cv::minMaxLoc(prob2d.row(i), nullptr, &confidence, nullptr, &class_id_point);
-        const int class_id = class_id_point.x;
-        if (confidence < conf_threshold || class_id < 0 || class_id >= static_cast<int>(classes.size())) {
-            continue;
+        for (size_t i = 0; i < chunkCount; ++i) {
+            const float* src = reinterpret_cast<const float*>(validBlobs[chunkStart + i].data);
+            std::memcpy(dst + i * sampleElems, src, sampleElems * sizeof(float));
         }
-        results[validIndices[i]] = { classes[class_id], static_cast<float>(confidence) };
+
+        cv::Mat prob;
+        {
+            std::unique_lock<std::mutex> lock(*model_mutex);
+            net_ptr->setInput(batchBlob);
+            prob = net_ptr->forward();
+        }
+
+        const int batch = static_cast<int>(chunkCount);
+        cv::Mat prob2d = prob.reshape(1, batch);
+        for (int i = 0; i < batch; ++i) {
+            cv::Point class_id_point;
+            double confidence = 0.0;
+            cv::minMaxLoc(prob2d.row(i), nullptr, &confidence, nullptr, &class_id_point);
+            const int class_id = class_id_point.x;
+            if (confidence < conf_threshold || class_id < 0 || class_id >= static_cast<int>(classes.size())) {
+                continue;
+            }
+            results[validIndices[chunkStart + i]] = { classes[class_id], static_cast<float>(confidence) };
+        }
     }
 
     return results;

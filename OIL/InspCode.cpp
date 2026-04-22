@@ -1824,12 +1824,32 @@ void InspCode::Code_ClassfyCode(InspCodeOut& outInfo)
 	}
 
 	if (CheckTimeout(m_params.timeOut)) return;
-	std::vector<FinsClassification> classResults = InferenceWorker::RunClassificationBatch(
-		outInfo.system.cameraId,
-		m_params.classfyModel,
-		m_params.classfyClassName,
-		classifyInputs
-	);
+	std::vector<FinsClassification> classResults(numDetails, { "", 0.0f });
+	const size_t chunkSize = 32;
+	for (size_t chunkStart = 0; chunkStart < classifyInputs.size(); chunkStart += chunkSize) {
+		const size_t chunkEnd = std::min(chunkStart + chunkSize, classifyInputs.size());
+		std::vector<cv::Mat> chunkInputs(
+			classifyInputs.begin() + chunkStart,
+			classifyInputs.begin() + chunkEnd
+		);
+
+		std::vector<FinsClassification> chunkResults = InferenceWorker::RunClassificationBatch(
+			outInfo.system.cameraId,
+			m_params.classfyModel,
+			m_params.classfyClassName,
+			chunkInputs
+		);
+
+		for (size_t i = 0; i < chunkResults.size(); ++i) {
+			classResults[chunkStart + i] = chunkResults[i];
+		}
+
+		if (CheckTimeout(m_params.timeOut)) {
+			outInfo.status.statusCode = CODE_RETURN_TIMEOUT;
+			outInfo.status.errorMessage = "字符识别超时!";
+			return;
+		}
+	}
 
 	for (size_t i = 0; i < classResults.size() && i < outInfo.locate.locateDetails.size(); ++i) {
 		outInfo.locate.locateDetails[i].className = classResults[i].className;
