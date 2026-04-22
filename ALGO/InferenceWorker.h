@@ -126,7 +126,8 @@ public:
         const std::string& model_path,
         const std::vector<std::string>& classes,
         const std::vector<cv::Mat>& inputs,
-        float conf_threshold = 0.25f);
+        float conf_threshold = 0.25f,
+        size_t infer_chunk_size = 16);
 
     static std::vector<FinsObject> RunTensorrt(
         int cameraId,

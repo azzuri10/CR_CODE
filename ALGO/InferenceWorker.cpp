@@ -884,7 +884,8 @@ std::vector<FinsClassification> InferenceWorker::RunClassificationBatch(
     const std::string& model_path,
     const std::vector<std::string>& classes,
     const std::vector<cv::Mat>& inputs,
-    float conf_threshold) {
+    float conf_threshold,
+    size_t infer_chunk_size) {
     std::vector<FinsClassification> results(inputs.size(), { "", 0.0f });
     if (inputs.empty()) {
         return results;
@@ -948,7 +949,7 @@ std::vector<FinsClassification> InferenceWorker::RunClassificationBatch(
         return results;
     }
 
-    constexpr size_t kChunkSize = 16;
+    const size_t kChunkSize = std::max<size_t>(1, infer_chunk_size);
     for (size_t chunkStart = 0; chunkStart < validBlobs.size(); chunkStart += kChunkSize) {
         const size_t chunkEnd = std::min(chunkStart + kChunkSize, validBlobs.size());
         const size_t chunkCount = chunkEnd - chunkStart;

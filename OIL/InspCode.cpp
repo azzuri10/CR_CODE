@@ -964,6 +964,12 @@ bool InspCode::readParams(cv::Mat img, const std::string& filePath, InspCodeIn& 
 				}
 			}
 		}
+		else if (keyWord == "CODE_CLASSFY_SCHED_CHUNK") {
+			params.classfySchedChunk = std::max(1, std::stoi(value));
+		}
+		else if (keyWord == "CODE_CLASSFY_INFER_CHUNK") {
+			params.classfyInferChunk = std::max(1, std::stoi(value));
+		}
 		else if (keyWord == "CODE_INFO_CHECK") {
 			params.infoConfig = value;
 			if (params.isClassfy)
@@ -1825,7 +1831,7 @@ void InspCode::Code_ClassfyCode(InspCodeOut& outInfo)
 
 	if (CheckTimeout(m_params.timeOut)) return;
 	std::vector<FinsClassification> classResults(numDetails, { "", 0.0f });
-	const size_t chunkSize = 32;
+	const size_t chunkSize = static_cast<size_t>(std::max(1, m_params.classfySchedChunk));
 	for (size_t chunkStart = 0; chunkStart < classifyInputs.size(); chunkStart += chunkSize) {
 		const size_t chunkEnd = std::min(chunkStart + chunkSize, classifyInputs.size());
 		std::vector<cv::Mat> chunkInputs(
@@ -1837,7 +1843,9 @@ void InspCode::Code_ClassfyCode(InspCodeOut& outInfo)
 			outInfo.system.cameraId,
 			m_params.classfyModel,
 			m_params.classfyClassName,
-			chunkInputs
+			chunkInputs,
+			0.25f,
+			static_cast<size_t>(std::max(1, m_params.classfyInferChunk))
 		);
 
 		for (size_t i = 0; i < chunkResults.size(); ++i) {

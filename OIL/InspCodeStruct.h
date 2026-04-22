@@ -127,6 +127,8 @@ struct InspCodeIn {
     std::string infoConfig;   // 喷码内容匹配
     std::string classfyConfig;   // 字符分类模型配置
     std::string classfyModel;   // 字符定位模型
+    int classfySchedChunk = 32;  // Code_ClassfyCode 外层分块大小
+    int classfyInferChunk = 16;  // InferenceWorker 批推理内部分块大小
     std::vector<std::string> classfyClassName; //字符类型
     std::vector<CodeClassfy> classfyPara;//字符参数
     CodeInfo inputInfo;
