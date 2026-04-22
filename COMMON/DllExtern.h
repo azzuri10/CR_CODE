@@ -5,6 +5,7 @@
 #include "InspLevel.h"
 #include "InspLabelAll.h"
 #include "InspCode.h"
+#include "InspOcr.h"
 #include "InspBottleNum.h"
 #include "InspBoxBag.h"
 #include "InspSew.h"
@@ -143,6 +144,27 @@ struct InspCodeResult {
         cameraId(0),
         statusCode(0)
     {
+        startTime[0] = '\0';
+        endTime[0] = '\0';
+        errorMessage[0] = '\0';
+    }
+};
+
+struct InspOcrResult {
+    cv::Mat imgOut;
+    int jobId;
+    int cameraId;
+    char startTime[64];
+    char endTime[64];
+    int statusCode;
+    char errorMessage[256];
+    std::string mergedText;
+    std::vector<DetectionResult> compareResults;
+
+    InspOcrResult() :
+        jobId(0),
+        cameraId(0),
+        statusCode(0) {
         startTime[0] = '\0';
         endTime[0] = '\0';
         errorMessage[0] = '\0';
@@ -340,6 +362,15 @@ extern "C" __declspec(dllexport) int CR_DLL_InspCode(
     bool loadConfig,         // 是否加载配置
     int timeOut,             // 超时时间(ms)
     InspCodeResult * result // 输出结果
+);
+extern "C" __declspec(dllexport) int CR_DLL_InspOcr(
+    cv::Mat img,             // 输入图像
+    int cameraId,            // 相机ID
+    int jobId,               // 任务ID
+    const char* configPath,  // 配置路径
+    bool loadConfig,         // 是否加载配置
+    int timeOut,             // 超时时间(ms)
+    InspOcrResult * result   // 输出结果
 );
 extern "C" __declspec(dllexport) int CR_DLL_InspBottleNum(
     cv::Mat img,             // 输入图像

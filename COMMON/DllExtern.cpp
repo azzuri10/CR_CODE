@@ -660,6 +660,103 @@ extern "C" __declspec(dllexport) int CR_DLL_InspCode(
 	return rv;  // 返回结果代码
 }
 
+extern "C" __declspec(dllexport) int CR_DLL_InspOcr(
+	cv::Mat img,
+	int cameraId,
+	int jobId,
+	const char* configPath,
+	bool loadConfig,
+	int timeOut,
+	InspOcrResult * result)
+{
+	(void)loadConfig;
+	timeOut = MAX(100, timeOut);
+
+	int rv = OCR_RETURN_OK;
+	auto start = std::chrono::high_resolution_clock::now();
+	auto COM = std::make_unique<Common>();
+	InspOcrOut outInfo;
+	outInfo.system.startTime = COM->time_t2string_with_ms();
+	outInfo.system.jobId = jobId;
+	outInfo.system.cameraId = cameraId;
+
+	char bufLog[100];
+	sprintf(bufLog, "Ocr/camera_%d/", outInfo.system.cameraId);
+	char bufConfig[100];
+	sprintf(bufConfig, "/InspCodeConfig_%d.txt", outInfo.system.cameraId);
+	outInfo.paths.logDirectory = ProjectConstants::LOG_PATH + std::string(bufLog);
+	outInfo.paths.intermediateImagesDir =
+		ProjectConstants::LOG_PATH + std::string(bufLog) + "IMG/" + std::to_string(outInfo.system.jobId) + "/";
+	outInfo.paths.resultsOKDir = ProjectConstants::LOG_PATH + std::string(bufLog) + "OK/";
+	outInfo.paths.resultsNGDir = ProjectConstants::LOG_PATH + std::string(bufLog) + "NG/";
+	outInfo.paths.configFile = std::string(configPath) + std::string(bufConfig);
+	outInfo.paths.logFile = outInfo.paths.logDirectory + "log_" + g_logSysTime_YMD + ".txt";
+
+	outInfo.status.errorMessage = "OK";
+	outInfo.status.statusCode = OCR_RETURN_OK;
+
+	if (img.empty()) {
+		Log::WriteAsyncLog("DLL_InspOcr: 输入图像为空!", ERR, "D://aoi_error_log.txt", true);
+		rv = OCR_RETURN_INPUT_PARA_ERR;
+	}
+	else if (jobId < 0) {
+		Log::WriteAsyncLog("DLL_InspOcr: jobId < 0", ERR, "D://aoi_error_log.txt", true);
+		rv = OCR_RETURN_INPUT_PARA_ERR;
+	}
+	else if (cameraId < 0 || cameraId > 9) {
+		Log::WriteAsyncLog("DLL_InspOcr: cameraId < 0 || cameraId > 9", ERR, "D://aoi_error_log.txt", true);
+		rv = OCR_RETURN_INPUT_PARA_ERR;
+	}
+
+	if (rv != OCR_RETURN_OK) {
+		if (result) {
+			result->statusCode = rv;
+			strncpy_s(result->errorMessage, "输入参数错误", sizeof(result->errorMessage) - 1);
+			result->imgOut = img.clone();
+		}
+		return rv;
+	}
+
+	try {
+		InspOcr ocr(img, cameraId, jobId, timeOut, outInfo);
+		rv = ocr.Ocr_Main(outInfo);
+
+		if (result) {
+			result->jobId = jobId;
+			result->cameraId = cameraId;
+			result->statusCode = rv;
+			if (!outInfo.system.startTime.empty()) {
+				strncpy_s(result->startTime, outInfo.system.startTime.c_str(), sizeof(result->startTime) - 1);
+			}
+			if (!outInfo.status.errorMessage.empty()) {
+				strncpy_s(result->errorMessage, outInfo.status.errorMessage.c_str(), sizeof(result->errorMessage) - 1);
+			}
+			result->mergedText = outInfo.ocr.mergedText;
+			result->compareResults = outInfo.ocr.compareResults;
+			if (!outInfo.images.outputImg.empty()) result->imgOut = outInfo.images.outputImg.clone();
+			else result->imgOut = img.clone();
+		}
+	}
+	catch (const std::exception& e) {
+		Log::WriteAsyncLog(std::string("CR_DLL_InspOcr异常: ") + e.what(), ERR, "D://aoi_error_log.txt", true);
+		rv = OCR_RETURN_ALGO_ERR;
+		if (result) {
+			result->statusCode = rv;
+			strncpy_s(result->errorMessage, "算法执行异常", sizeof(result->errorMessage) - 1);
+			result->imgOut = img.clone();
+		}
+	}
+
+	auto end = std::chrono::high_resolution_clock::now();
+	double duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+	{
+		std::lock_guard<std::mutex> lock(g_durationMutex);
+		g_cameraDurations[cameraId] = duration;
+	}
+	Log::WriteAsyncLog("********** End OCR JobID = ", INFO, outInfo.paths.logFile, true, jobId, ", Duration = ", duration, "ms ***********");
+	return rv;
+}
+
 extern "C" __declspec(dllexport) void FreeInspCapResult(InspCapOmniResult * result) {
 	if (!result) return;
 
