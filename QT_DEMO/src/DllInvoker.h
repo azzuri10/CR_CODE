@@ -66,6 +66,28 @@ struct InspCodeResult {
     char errorMessage[256];
 };
 
+struct DetectionResult {
+    int row = 0;
+    int part = 0;
+    std::string type;
+    std::string expectedInfo;
+    std::string actualInfo;
+    std::string status;
+    std::string message;
+};
+
+struct InspOcrResult {
+    cv::Mat imgOut;
+    int jobId;
+    int cameraId;
+    char startTime[64];
+    char endTime[64];
+    int statusCode;
+    char errorMessage[256];
+    std::string mergedText;
+    std::vector<DetectionResult> compareResults;
+};
+
 struct InspBoxBagResult {
     cv::Mat imgOut;
     int jobId;
@@ -81,7 +103,8 @@ enum class InspectType {
     Level,
     Handle,
     Box,
-    Code
+    Code,
+    Ocr
 };
 
 class DllInvoker {
@@ -99,6 +122,7 @@ private:
     using FnInspectHandle = int (*)(cv::Mat, int, int, const char*, bool, int, InspHandleResult*);
     using FnInspectBox = int (*)(cv::Mat, int, int, const char*, bool, int, InspBoxBagResult*);
     using FnInspectCode = int (*)(cv::Mat, int, int, const char*, bool, int, InspCodeResult*);
+    using FnInspectOcr = int (*)(cv::Mat, int, int, const char*, bool, int, InspOcrResult*);
 
     void* module_;
     FnInspectCapOmni fnCapOmni_;
@@ -106,4 +130,5 @@ private:
     FnInspectHandle fnHandle_;
     FnInspectBox fnBox_;
     FnInspectCode fnCode_;
+    FnInspectOcr fnOcr_;
 };

@@ -10,7 +10,7 @@ T GetProcChecked(HMODULE module, const char* name) {
 }
 
 DllInvoker::DllInvoker()
-    : module_(nullptr), fnCapOmni_(nullptr), fnLevel_(nullptr), fnHandle_(nullptr), fnBox_(nullptr), fnCode_(nullptr) {
+    : module_(nullptr), fnCapOmni_(nullptr), fnLevel_(nullptr), fnHandle_(nullptr), fnBox_(nullptr), fnCode_(nullptr), fnOcr_(nullptr) {
 }
 
 DllInvoker::~DllInvoker() {
@@ -37,8 +37,9 @@ bool DllInvoker::load(const QString& dllPath, QString* errMsg) {
     fnHandle_ = GetProcChecked<FnInspectHandle>(mod, "CR_DLL_InspHandle");
     fnBox_ = GetProcChecked<FnInspectBox>(mod, "CR_DLL_InspBoxBag");
     fnCode_ = GetProcChecked<FnInspectCode>(mod, "CR_DLL_InspCode");
+    fnOcr_ = GetProcChecked<FnInspectOcr>(mod, "CR_DLL_InspOcr");
 
-    if (!fnCapOmni_ || !fnLevel_ || !fnHandle_ || !fnBox_ || !fnCode_) {
+    if (!fnCapOmni_ || !fnLevel_ || !fnHandle_ || !fnBox_ || !fnCode_ || !fnOcr_) {
         FreeLibrary(mod);
         if (errMsg) *errMsg = "DLL 缺少必要导出函数";
         return false;
@@ -72,6 +73,7 @@ int DllInvoker::inspect(InspectType type, const cv::Mat& input, int jobId, int c
         case InspectType::Handle: channels = 1; break;
         case InspectType::Box: channels = 3; break;
         case InspectType::Code: channels = 1; break;
+        case InspectType::Ocr: channels = 3; break;
     }
 
     cv::Mat in;
@@ -121,6 +123,17 @@ int DllInvoker::inspect(InspectType type, const cv::Mat& input, int jobId, int c
             rv = fnCode_(in, cameraId, jobId, configPath, loadConfig, timeoutMs, &result);
             if (!result.imgOut.empty()) out = result.imgOut.clone();
             detail = result.errorMessage;
+            break;
+        }
+        case InspectType::Ocr: {
+            InspOcrResult result;
+            rv = fnOcr_(in, cameraId, jobId, configPath, loadConfig, timeoutMs, &result);
+            if (!result.imgOut.empty()) out = result.imgOut.clone();
+            detail = result.errorMessage;
+            if (!result.mergedText.empty()) {
+                if (!detail.empty()) detail += " | ";
+                detail += "OCR=" + result.mergedText;
+            }
             break;
         }
     }

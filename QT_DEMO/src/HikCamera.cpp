@@ -18,10 +18,18 @@ bool HikCamera::isOpened() const {
 }
 
 bool HikCamera::openFirst(std::string* errMsg) {
+    return openByIndex(0, errMsg);
+}
+
+bool HikCamera::openByIndex(int deviceIndex, std::string* errMsg) {
 #ifndef HAVE_HIK_MVS
     if (errMsg) *errMsg = "Hik MVS SDK not enabled in build.";
     return false;
 #else
+    if (deviceIndex < 0) {
+        if (errMsg) *errMsg = "Invalid camera index";
+        return false;
+    }
     if (handle_) return true;
 
     int nRet = MV_CC_Initialize();
@@ -38,9 +46,14 @@ bool HikCamera::openFirst(std::string* errMsg) {
         if (errMsg) *errMsg = "No Hik camera found";
         return false;
     }
+    if (deviceIndex >= static_cast<int>(devList.nDeviceNum)) {
+        MV_CC_Finalize();
+        if (errMsg) *errMsg = "Camera index out of range";
+        return false;
+    }
 
     void* localHandle = nullptr;
-    nRet = MV_CC_CreateHandle(&localHandle, devList.pDeviceInfo[0]);
+    nRet = MV_CC_CreateHandle(&localHandle, devList.pDeviceInfo[deviceIndex]);
     if (nRet != MV_OK || !localHandle) {
         MV_CC_Finalize();
         if (errMsg) *errMsg = "MV_CC_CreateHandle failed";

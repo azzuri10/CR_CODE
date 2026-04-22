@@ -12,6 +12,7 @@ class QLineEdit;
 class QPushButton;
 class QSpinBox;
 class QTimer;
+class QTextEdit;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -30,12 +31,21 @@ private slots:
     void onHikCapture();
 
 private:
+    enum class TriggerMode {
+        Single = 0,
+        Continuous = 1
+    };
+
     void setupUi();
     void refreshInputListByFile(const QString& filePath);
     void refreshInputListByFolder(const QString& folderPath);
     void showImage(const cv::Mat& img);
     bool processCurrentIndex(bool autoNext);
+    bool processSingleHikFrame();
     InspectType currentInspectType() const;
+    TriggerMode currentTriggerMode() const;
+    bool isHikSource() const;
+    void appendLog(const QString& text);
 
     DllInvoker invoker_;
     HikCamera hikCamera_;
@@ -47,10 +57,17 @@ private:
     QLineEdit* editDllPath_;
     QLineEdit* editInputPath_;
     QComboBox* comboType_;
+    QComboBox* comboSource_;
+    QComboBox* comboTriggerMode_;
     QSpinBox* spinCameraId_;
+    QSpinBox* spinHikIndex_;
+    QSpinBox* spinIntervalMs_;
+    QSpinBox* spinGrabTimeoutMs_;
     QLabel* imageLabel_;
     QLabel* statusLabel_;
+    QTextEdit* logText_;
     QPushButton* btnContinuous_;
     QPushButton* btnStop_;
+    QPushButton* btnHikSingle_;
     QTimer* runTimer_;
 };

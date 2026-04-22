@@ -9,6 +9,7 @@ public:
     ~HikCamera();
 
     bool openFirst(std::string* errMsg);
+    bool openByIndex(int deviceIndex, std::string* errMsg);
     bool isOpened() const;
     bool grab(cv::Mat* frame, std::string* errMsg, int timeoutMs = 1000);
     void close();
