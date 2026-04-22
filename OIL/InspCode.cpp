@@ -1806,27 +1806,33 @@ void InspCode::Code_ClassfyCode(InspCodeOut& outInfo)
 	}
 
 	size_t numDetails = outInfo.locate.locateDetails.size();
-	std::vector<FinsClassification> charType(numDetails);
-	std::vector<std::future<FinsClassification>> futures;
-
-	// 创建异步任务
-	for (size_t i = 0; i < numDetails; i++) {
-		futures.push_back(std::async(std::launch::async, [&, i]() {
-			cv::Rect curRect;
-			ANA->ChangeRectBnd(outInfo.locate.locateDetails[i].box, m_params.inputInfo.extW, m_params.inputInfo.extH, curRect);
-			curRect = ANA->AdjustROI(curRect, m_imgLocate);
-			return InferenceWorker::RunClassification(
-				outInfo.system.cameraId,
-				m_params.classfyModel,
-				m_params.classfyClassName,
-				m_imgLocate(curRect)
-			);
-			}));
+	if (numDetails == 0) {
+		return;
 	}
 
-	// 等待所有任务完成并收集结果
-	for (size_t i = 0; i < futures.size(); i++) {
-		outInfo.locate.locateDetails[i].className = (futures[i].get()).className;
+	std::vector<cv::Mat> classifyInputs;
+	classifyInputs.reserve(numDetails);
+	for (size_t i = 0; i < numDetails; ++i) {
+		cv::Rect curRect;
+		ANA->ChangeRectBnd(outInfo.locate.locateDetails[i].box, m_params.inputInfo.extW, m_params.inputInfo.extH, curRect);
+		curRect = ANA->AdjustROI(curRect, m_imgLocate);
+		if (curRect.width <= 0 || curRect.height <= 0) {
+			classifyInputs.emplace_back();
+			continue;
+		}
+		classifyInputs.push_back(m_imgLocate(curRect).clone());
+	}
+
+	if (CheckTimeout(m_params.timeOut)) return;
+	std::vector<FinsClassification> classResults = InferenceWorker::RunClassificationBatch(
+		outInfo.system.cameraId,
+		m_params.classfyModel,
+		m_params.classfyClassName,
+		classifyInputs
+	);
+
+	for (size_t i = 0; i < classResults.size() && i < outInfo.locate.locateDetails.size(); ++i) {
+		outInfo.locate.locateDetails[i].className = classResults[i].className;
 	}
 }
 

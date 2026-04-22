@@ -879,6 +879,112 @@ FinsClassification InferenceWorker::RunClassification(
     return { classes[class_id], static_cast<float>(confidence) };
 }
 
+std::vector<FinsClassification> InferenceWorker::RunClassificationBatch(
+    int cameraId,
+    const std::string& model_path,
+    const std::vector<std::string>& classes,
+    const std::vector<cv::Mat>& inputs,
+    float conf_threshold) {
+    std::vector<FinsClassification> results(inputs.size(), { "", 0.0f });
+    if (inputs.empty()) {
+        return results;
+    }
+
+    if (model_path.find(".engine") != std::string::npos) {
+        for (size_t i = 0; i < inputs.size(); ++i) {
+            if (inputs[i].empty()) {
+                continue;
+            }
+            results[i] = RunClassification(cameraId, model_path, classes, inputs[i], conf_threshold);
+        }
+        return results;
+    }
+
+    auto& mgr = ModelManager::Instance(cameraId);
+    if (!mgr.IsModelLoaded(model_path)) {
+        mgr.LoadModel(model_path, 0);
+    }
+
+    TensorRTContext* trt_context = nullptr;
+    auto model_mutex = GetModelMutex(cameraId, model_path, trt_context);
+    auto net_ptr = mgr.GetCVDNNModel(model_path);
+
+    cv::dnn::MatShape inputShape;
+    std::vector<cv::dnn::MatShape> inLayerShapes, outLayerShapes;
+    {
+        std::unique_lock<std::mutex> lock(*model_mutex);
+        net_ptr->getLayerShapes(inputShape, 0, inLayerShapes, outLayerShapes);
+    }
+
+    const int inputWidth = inLayerShapes[0][3];
+    const int inputHeight = inLayerShapes[0][2];
+    const int channels = inLayerShapes[0][1];
+
+    std::vector<cv::Mat> validBlobs;
+    std::vector<size_t> validIndices;
+    validBlobs.reserve(inputs.size());
+    validIndices.reserve(inputs.size());
+
+    for (size_t i = 0; i < inputs.size(); ++i) {
+        if (inputs[i].empty()) {
+            continue;
+        }
+        cv::Mat resized;
+        cv::resize(inputs[i], resized, cv::Size(inputWidth, inputHeight));
+        if (channels == 1 && resized.channels() == 3) {
+            cv::cvtColor(resized, resized, cv::COLOR_BGR2GRAY);
+        }
+        else if (channels == 3 && resized.channels() == 1) {
+            cv::cvtColor(resized, resized, cv::COLOR_GRAY2BGR);
+        }
+
+        cv::Mat blob;
+        cv::dnn::blobFromImage(resized, blob, 1.0 / 255.0, cv::Size(), cv::Scalar(0, 0, 0), true, false);
+        validBlobs.push_back(blob);
+        validIndices.push_back(i);
+    }
+
+    if (validBlobs.empty()) {
+        return results;
+    }
+
+    int dims[4] = {
+        static_cast<int>(validBlobs.size()),
+        validBlobs[0].size[1],
+        validBlobs[0].size[2],
+        validBlobs[0].size[3]
+    };
+    cv::Mat batchBlob(4, dims, CV_32F);
+    const size_t sampleElems = static_cast<size_t>(dims[1]) * dims[2] * dims[3];
+    float* dst = reinterpret_cast<float*>(batchBlob.data);
+    for (size_t i = 0; i < validBlobs.size(); ++i) {
+        const float* src = reinterpret_cast<const float*>(validBlobs[i].data);
+        std::memcpy(dst + i * sampleElems, src, sampleElems * sizeof(float));
+    }
+
+    cv::Mat prob;
+    {
+        std::unique_lock<std::mutex> lock(*model_mutex);
+        net_ptr->setInput(batchBlob);
+        prob = net_ptr->forward();
+    }
+
+    const int batch = static_cast<int>(validBlobs.size());
+    cv::Mat prob2d = prob.reshape(1, batch);
+    for (int i = 0; i < batch; ++i) {
+        cv::Point class_id_point;
+        double confidence = 0.0;
+        cv::minMaxLoc(prob2d.row(i), nullptr, &confidence, nullptr, &class_id_point);
+        const int class_id = class_id_point.x;
+        if (confidence < conf_threshold || class_id < 0 || class_id >= static_cast<int>(classes.size())) {
+            continue;
+        }
+        results[validIndices[i]] = { classes[class_id], static_cast<float>(confidence) };
+    }
+
+    return results;
+}
+
 
 std::vector<FinsObject> InferenceWorker::RunTensorrt(
     int cameraId,

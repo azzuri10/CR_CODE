@@ -121,6 +121,12 @@ public:
         const std::vector<std::string>& classes,
         const cv::Mat& input,
         float conf_threshold = 0.25f);
+    static std::vector<FinsClassification> RunClassificationBatch(
+        int cameraId,
+        const std::string& model_path,
+        const std::vector<std::string>& classes,
+        const std::vector<cv::Mat>& inputs,
+        float conf_threshold = 0.25f);
 
     static std::vector<FinsObject> RunTensorrt(
         int cameraId,
